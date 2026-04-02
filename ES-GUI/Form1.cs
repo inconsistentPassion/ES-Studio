@@ -58,7 +58,30 @@ namespace ES_GUI
         private DynoUtil chartUtil;
 
         private bool readyToConnect = false;
-        
+
+        // Drag Strip
+        private DragStrip dragStrip;
+        private Label dragTimerLabel;
+        private Label dragSpeedLabel;
+        private Label dragDistanceLabel;
+        private Label dragGearLabel;
+        private Label dragRPMLabel;
+        private Label dragStatusLabel;
+        private Label[] dragSplitNameLabels;
+        private Label[] dragSplitTimeLabels;
+        private Label[] dragSplitSpeedLabels;
+        private Label[] dragBestSplitTimeLabels;
+        private ComboBox dragDistanceCombo;
+        private RoundButton dragStageBtn;
+        private RoundButton dragGoBtn;
+        private RoundButton dragStopBtn;
+        private RoundButton dragResetBtn;
+        private Label dragBestTimeLabel;
+        private Label dragBestSpeedLabel;
+        private Label dragLastTimeLabel;
+        private Label dragLastSpeedLabel;
+        private Label dragNoDataMsg;
+
         public Form1()
         {
             InitializeComponent();
@@ -198,6 +221,9 @@ namespace ES_GUI
 
             chartUtil.ConfigureDynoChart();
             chartUtil.CreateDynoLabels();
+
+            InitDragStrip();
+
             manageControls(false);
             GaugeSweep();
         }
@@ -302,6 +328,529 @@ namespace ES_GUI
             t.Start();
             threadPool.Add(t);
         }
+
+        // ==================== DRAG STRIP ====================
+
+        private void InitDragStrip()
+        {
+            dragStrip = new DragStrip();
+
+            int x = 20, y = 15;
+            int labelH = 22;
+            Color headerColor = Color.FromArgb(50, 50, 50);
+            Color accentColor = Color.MediumBlue;
+            Color goodColor = Color.FromArgb(0, 160, 0);
+
+            // Status label
+            dragStatusLabel = new Label
+            {
+                Text = "IDLE",
+                Location = new Point(x, y),
+                AutoSize = false,
+                Size = new Size(300, 32),
+                Font = new Font("Segoe UI", 16, FontStyle.Bold),
+                ForeColor = Color.Gray
+            };
+            tabPage6.Controls.Add(dragStatusLabel);
+            y += 40;
+
+            // Distance selector
+            dragDistanceCombo = new ComboBox
+            {
+                Location = new Point(x, y),
+                Size = new Size(140, 24),
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                Font = new Font("Segoe UI", 9)
+            };
+            dragDistanceCombo.Items.AddRange(new string[] { "1/4 Mile (1320 ft)", "1/2 Mile", "1 Mile" });
+            dragDistanceCombo.SelectedIndex = 0;
+            dragDistanceCombo.SelectedIndexChanged += DragDistanceCombo_Changed;
+            tabPage6.Controls.Add(dragDistanceCombo);
+            y += 32;
+
+            // Stage / GO / Stop / Reset buttons
+            dragStageBtn = new RoundButton
+            {
+                Text = "STAGE",
+                Location = new Point(x, y),
+                Size = new Size(110, 40),
+                CircleColor = Color.FromArgb(200, 160, 0),
+                ForeColor = Color.White,
+                Font = new Font("Segoe UI", 10, FontStyle.Bold)
+            };
+            dragStageBtn.Click += DragStage_Click;
+            tabPage6.Controls.Add(dragStageBtn);
+
+            dragGoBtn = new RoundButton
+            {
+                Text = "GO!",
+                Location = new Point(x + 120, y),
+                Size = new Size(90, 40),
+                CircleColor = goodColor,
+                ForeColor = Color.White,
+                Font = new Font("Segoe UI", 11, FontStyle.Bold),
+                Enabled = false
+            };
+            dragGoBtn.Click += DragGo_Click;
+            tabPage6.Controls.Add(dragGoBtn);
+
+            dragStopBtn = new RoundButton
+            {
+                Text = "ABORT",
+                Location = new Point(x + 220, y),
+                Size = new Size(100, 40),
+                CircleColor = Color.FromArgb(180, 30, 30),
+                ForeColor = Color.White,
+                Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                Enabled = false
+            };
+            dragStopBtn.Click += DragStop_Click;
+            tabPage6.Controls.Add(dragStopBtn);
+
+            dragResetBtn = new RoundButton
+            {
+                Text = "RESET",
+                Location = new Point(x + 330, y),
+                Size = new Size(100, 40),
+                CircleColor = accentColor,
+                ForeColor = Color.White,
+                Font = new Font("Segoe UI", 10, FontStyle.Bold)
+            };
+            dragResetBtn.Click += DragReset_Click;
+            tabPage6.Controls.Add(dragResetBtn);
+            y += 52;
+
+            // Big timer
+            dragTimerLabel = new Label
+            {
+                Text = "0.000",
+                Location = new Point(x, y),
+                AutoSize = false,
+                Size = new Size(240, 50),
+                Font = new Font("Consolas", 36, FontStyle.Bold),
+                ForeColor = headerColor
+            };
+            tabPage6.Controls.Add(dragTimerLabel);
+
+            // Speed / Gear / RPM live readouts
+            dragSpeedLabel = new Label
+            {
+                Text = "0.0 km/h",
+                Location = new Point(x + 260, y),
+                AutoSize = false,
+                Size = new Size(160, 24),
+                Font = new Font("Segoe UI", 12),
+                ForeColor = Color.DimGray
+            };
+            tabPage6.Controls.Add(dragSpeedLabel);
+
+            dragGearLabel = new Label
+            {
+                Text = "N",
+                Location = new Point(x + 260, y + 28),
+                AutoSize = false,
+                Size = new Size(60, 24),
+                Font = new Font("Segoe UI", 12),
+                ForeColor = Color.DimGray
+            };
+            tabPage6.Controls.Add(dragGearLabel);
+
+            dragRPMLabel = new Label
+            {
+                Text = "0 RPM",
+                Location = new Point(x + 330, y + 28),
+                AutoSize = false,
+                Size = new Size(120, 24),
+                Font = new Font("Segoe UI", 12),
+                ForeColor = Color.DimGray
+            };
+            tabPage6.Controls.Add(dragRPMLabel);
+
+            dragDistanceLabel = new Label
+            {
+                Text = "0 m",
+                Location = new Point(x + 450, y),
+                AutoSize = false,
+                Size = new Size(140, 24),
+                Font = new Font("Segoe UI", 12),
+                ForeColor = Color.DimGray
+            };
+            tabPage6.Controls.Add(dragDistanceLabel);
+            y += 65;
+
+            // Split times table header
+            Label splitHeader = new Label
+            {
+                Text = "Split",
+                Location = new Point(x, y),
+                AutoSize = false,
+                Size = new Size(90, labelH),
+                Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                ForeColor = headerColor
+            };
+            tabPage6.Controls.Add(splitHeader);
+            Label timeHeader = new Label
+            {
+                Text = "Time (s)",
+                Location = new Point(x + 100, y),
+                AutoSize = false,
+                Size = new Size(100, labelH),
+                Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                ForeColor = headerColor
+            };
+            tabPage6.Controls.Add(timeHeader);
+            Label speedHeader = new Label
+            {
+                Text = "Speed",
+                Location = new Point(x + 210, y),
+                AutoSize = false,
+                Size = new Size(100, labelH),
+                Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                ForeColor = headerColor
+            };
+            tabPage6.Controls.Add(speedHeader);
+            Label bestTimeHeader = new Label
+            {
+                Text = "Best Time",
+                Location = new Point(x + 320, y),
+                AutoSize = false,
+                Size = new Size(100, labelH),
+                Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                ForeColor = goodColor
+            };
+            tabPage6.Controls.Add(bestTimeHeader);
+            y += labelH + 4;
+
+            // Split rows
+            string[] splitNames = { "60 ft", "330 ft", "1/8 mi", "1000 ft", "1/4 mi", "1/2 mi", "1 mi" };
+            dragSplitNameLabels = new Label[splitNames.Length];
+            dragSplitTimeLabels = new Label[splitNames.Length];
+            dragSplitSpeedLabels = new Label[splitNames.Length];
+            dragBestSplitTimeLabels = new Label[splitNames.Length];
+
+            for (int i = 0; i < splitNames.Length; i++)
+            {
+                dragSplitNameLabels[i] = new Label
+                {
+                    Text = splitNames[i],
+                    Location = new Point(x, y),
+                    AutoSize = false,
+                    Size = new Size(90, labelH),
+                    Font = new Font("Segoe UI", 9)
+                };
+                tabPage6.Controls.Add(dragSplitNameLabels[i]);
+
+                dragSplitTimeLabels[i] = new Label
+                {
+                    Text = "--.---",
+                    Location = new Point(x + 100, y),
+                    AutoSize = false,
+                    Size = new Size(100, labelH),
+                    Font = new Font("Consolas", 9)
+                };
+                tabPage6.Controls.Add(dragSplitTimeLabels[i]);
+
+                dragSplitSpeedLabels[i] = new Label
+                {
+                    Text = "---",
+                    Location = new Point(x + 210, y),
+                    AutoSize = false,
+                    Size = new Size(100, labelH),
+                    Font = new Font("Consolas", 9)
+                };
+                tabPage6.Controls.Add(dragSplitSpeedLabels[i]);
+
+                dragBestSplitTimeLabels[i] = new Label
+                {
+                    Text = "--.---",
+                    Location = new Point(x + 320, y),
+                    AutoSize = false,
+                    Size = new Size(100, labelH),
+                    Font = new Font("Consolas", 9),
+                    ForeColor = goodColor
+                };
+                tabPage6.Controls.Add(dragBestSplitTimeLabels[i]);
+
+                y += labelH + 2;
+            }
+            y += 12;
+
+            // Results summary
+            Label lastRunHeader = new Label
+            {
+                Text = "Last Run",
+                Location = new Point(x, y),
+                AutoSize = false,
+                Size = new Size(100, labelH),
+                Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                ForeColor = headerColor
+            };
+            tabPage6.Controls.Add(lastRunHeader);
+            y += labelH + 2;
+
+            dragLastTimeLabel = new Label
+            {
+                Text = "ET: --.--- s",
+                Location = new Point(x + 10, y),
+                AutoSize = false,
+                Size = new Size(180, labelH),
+                Font = new Font("Segoe UI", 9)
+            };
+            tabPage6.Controls.Add(dragLastTimeLabel);
+
+            dragLastSpeedLabel = new Label
+            {
+                Text = "Trap: --- km/h",
+                Location = new Point(x + 200, y),
+                AutoSize = false,
+                Size = new Size(180, labelH),
+                Font = new Font("Segoe UI", 9)
+            };
+            tabPage6.Controls.Add(dragLastSpeedLabel);
+            y += labelH + 8;
+
+            Label bestRunHeader = new Label
+            {
+                Text = "Best Run",
+                Location = new Point(x, y),
+                AutoSize = false,
+                Size = new Size(100, labelH),
+                Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                ForeColor = goodColor
+            };
+            tabPage6.Controls.Add(bestRunHeader);
+            y += labelH + 2;
+
+            dragBestTimeLabel = new Label
+            {
+                Text = "ET: --.--- s",
+                Location = new Point(x + 10, y),
+                AutoSize = false,
+                Size = new Size(180, labelH),
+                Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                ForeColor = goodColor
+            };
+            tabPage6.Controls.Add(dragBestTimeLabel);
+
+            dragBestSpeedLabel = new Label
+            {
+                Text = "Trap: --- km/h",
+                Location = new Point(x + 200, y),
+                AutoSize = false,
+                Size = new Size(180, labelH),
+                Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                ForeColor = goodColor
+            };
+            tabPage6.Controls.Add(dragBestSpeedLabel);
+            y += labelH + 12;
+
+            // "No data" overlay message
+            dragNoDataMsg = new Label
+            {
+                Text = "Connect to Engine Simulator to use the Drag Strip",
+                Location = new Point(x + 100, 220),
+                AutoSize = false,
+                Size = new Size(400, 40),
+                Font = new Font("Segoe UI", 12, FontStyle.Italic),
+                ForeColor = Color.Gray,
+                TextAlign = ContentAlignment.MiddleCenter,
+                Visible = true
+            };
+            tabPage6.Controls.Add(dragNoDataMsg);
+
+            // Start the drag strip update timer (runs at ~60 Hz)
+            System.Windows.Forms.Timer dragTimer = new System.Windows.Forms.Timer();
+            dragTimer.Interval = 16;
+            dragTimer.Tick += DragUpdate_Tick;
+            dragTimer.Start();
+        }
+
+        private void DragDistanceCombo_Changed(object sender, EventArgs e)
+        {
+            switch (dragDistanceCombo.SelectedIndex)
+            {
+                case 0: dragStrip.SelectedDistance = 402; break;  // 1/4 mile
+                case 1: dragStrip.SelectedDistance = 805; break;  // 1/2 mile
+                case 2: dragStrip.SelectedDistance = 1609; break; // 1 mile
+            }
+        }
+
+        private void DragStage_Click(object sender, EventArgs e)
+        {
+            dragStrip.Stage();
+            dragStatusLabel.Text = "STAGED";
+            dragStatusLabel.ForeColor = Color.FromArgb(200, 160, 0);
+            dragGoBtn.Enabled = true;
+            dragStageBtn.Enabled = false;
+            dragStopBtn.Enabled = false;
+            ClearDragSplits();
+        }
+
+        private void DragGo_Click(object sender, EventArgs e)
+        {
+            dragStrip.Go();
+            dragStatusLabel.Text = "RUNNING";
+            dragStatusLabel.ForeColor = Color.FromArgb(0, 160, 0);
+            dragGoBtn.Enabled = false;
+            dragStageBtn.Enabled = false;
+            dragStopBtn.Enabled = true;
+        }
+
+        private void DragStop_Click(object sender, EventArgs e)
+        {
+            dragStrip.Stop();
+            dragStatusLabel.Text = "ABORTED";
+            dragStatusLabel.ForeColor = Color.FromArgb(180, 30, 30);
+            dragStageBtn.Enabled = true;
+            dragGoBtn.Enabled = false;
+            dragStopBtn.Enabled = false;
+            UpdateDragResults();
+        }
+
+        private void DragReset_Click(object sender, EventArgs e)
+        {
+            dragStrip.Reset();
+            dragStatusLabel.Text = "IDLE";
+            dragStatusLabel.ForeColor = Color.Gray;
+            dragTimerLabel.Text = "0.000";
+            dragSpeedLabel.Text = "0.0 km/h";
+            dragGearLabel.Text = "N";
+            dragRPMLabel.Text = "0 RPM";
+            dragDistanceLabel.Text = "0 m";
+            dragStageBtn.Enabled = true;
+            dragGoBtn.Enabled = false;
+            dragStopBtn.Enabled = false;
+            ClearDragSplits();
+        }
+
+        private void ClearDragSplits()
+        {
+            for (int i = 0; i < dragSplitTimeLabels.Length; i++)
+            {
+                dragSplitTimeLabels[i].Text = "--.---";
+                dragSplitSpeedLabels[i].Text = "---";
+                dragSplitTimeLabels[i].ForeColor = Color.Black;
+            }
+        }
+
+        private void DragUpdate_Tick(object sender, EventArgs e)
+        {
+            if (dragStrip == null) return;
+
+            // Live readouts
+            dragTimerLabel.Text = DragStrip.FormatTime(dragStrip.ElapsedSeconds);
+            dragSpeedLabel.Text = $"{dragStrip.CurrentSpeedKmh:F1} km/h";
+            dragDistanceLabel.Text = DragStrip.FormatDistance(dragStrip.DistanceMeters);
+
+            if (dragStrip.CurrentGear == -1)
+                dragGearLabel.Text = "N";
+            else
+                dragGearLabel.Text = (dragStrip.CurrentGear + 1).ToString();
+
+            dragRPMLabel.Text = $"{dragStrip.CurrentRPM:F0} RPM";
+
+            // Update split labels as they're hit
+            if (dragStrip.LastRun != null)
+            {
+                for (int i = 0; i < dragStrip.LastRun.Splits.Length && i < dragSplitTimeLabels.Length; i++)
+                {
+                    var split = dragStrip.LastRun.Splits[i];
+                    if (split.Hit)
+                    {
+                        dragSplitTimeLabels[i].Text = DragStrip.FormatTime(split.ElapsedTime);
+                        dragSplitSpeedLabels[i].Text = $"{DragStrip.FormatSpeed(split.SpeedKmh)} km/h";
+                        dragSplitTimeLabels[i].ForeColor = Color.Black;
+                    }
+                }
+            }
+
+            // Status transitions
+            if (dragStrip.Running)
+            {
+                dragStatusLabel.Text = "RUNNING";
+                dragStatusLabel.ForeColor = Color.FromArgb(0, 160, 0);
+            }
+            else if (dragStrip.LastRun != null && dragStrip.LastRun.Finished && !dragStrip.Staged)
+            {
+                if (dragStatusLabel.Text != "FINISHED" && dragStatusLabel.Text != "ABORTED")
+                {
+                    dragStatusLabel.Text = "FINISHED";
+                    dragStatusLabel.ForeColor = Color.MediumBlue;
+                    dragStageBtn.Enabled = true;
+                    dragGoBtn.Enabled = false;
+                    dragStopBtn.Enabled = false;
+                    UpdateDragResults();
+                }
+            }
+
+            // Update best split labels
+            if (dragStrip.BestRun != null && dragStrip.BestRun.Finished)
+            {
+                for (int i = 0; i < dragStrip.BestRun.Splits.Length && i < dragBestSplitTimeLabels.Length; i++)
+                {
+                    var split = dragStrip.BestRun.Splits[i];
+                    if (split.Hit)
+                    {
+                        dragBestSplitTimeLabels[i].Text = DragStrip.FormatTime(split.ElapsedTime);
+                    }
+                }
+            }
+
+            // Hide "no data" message when connected
+            if (client != null && client.isConnected && dragNoDataMsg.Visible)
+            {
+                dragNoDataMsg.Visible = false;
+            }
+        }
+
+        private void UpdateDragResults()
+        {
+            // Last run
+            if (dragStrip.LastRun != null && dragStrip.LastRun.Finished)
+            {
+                var mainSplit = GetMainSplit(dragStrip.LastRun);
+                if (mainSplit != null && mainSplit.Hit)
+                {
+                    dragLastTimeLabel.Text = $"ET: {DragStrip.FormatTime(mainSplit.ElapsedTime)} s";
+                    dragLastSpeedLabel.Text = $"Trap: {DragStrip.FormatSpeed(mainSplit.SpeedKmh)} km/h";
+                }
+                else
+                {
+                    dragLastTimeLabel.Text = "ET: DNF";
+                    dragLastSpeedLabel.Text = $"Trap: {DragStrip.FormatSpeed(dragStrip.CurrentSpeedKmh)} km/h";
+                }
+            }
+
+            // Best run
+            if (dragStrip.BestRun != null && dragStrip.BestRun.Finished)
+            {
+                var mainSplit = GetMainSplit(dragStrip.BestRun);
+                if (mainSplit != null && mainSplit.Hit)
+                {
+                    dragBestTimeLabel.Text = $"ET: {DragStrip.FormatTime(mainSplit.ElapsedTime)} s";
+                    dragBestSpeedLabel.Text = $"Trap: {DragStrip.FormatSpeed(mainSplit.SpeedKmh)} km/h";
+                }
+            }
+        }
+
+        private DragSplit GetMainSplit(DragStripResult result)
+        {
+            // Return the split matching the selected distance
+            foreach (var s in result.Splits)
+            {
+                if (s.DistanceMeters == dragStrip.SelectedDistance)
+                    return s;
+            }
+            // Fallback: last hit split
+            DragSplit last = null;
+            foreach (var s in result.Splits)
+            {
+                if (s.Hit) last = s;
+            }
+            return last;
+        }
+
+        // ==================== END DRAG STRIP ====================
 
         private void ClientUpdate()
         {
@@ -535,6 +1084,12 @@ namespace ES_GUI
                         if (dynoLogging)
                         {
                             DynoLog();
+                        }
+
+                        // Drag strip integration
+                        if (dragStrip != null && (dragStrip.Running || dragStrip.Staged))
+                        {
+                            dragStrip.Update(client.update.vehicleSpeed, client.update.RPM, client.update.gear);
                         }
                     }
                     else

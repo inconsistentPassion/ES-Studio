@@ -105,6 +105,7 @@
     <Compile Include="CustomTabControl.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="DragStrip.cs" />
     <Compile Include="DynoUtil.cs" />
     <Compile Include="comPipe.cs" />
     <Compile Include="CreateMapForm.cs">
