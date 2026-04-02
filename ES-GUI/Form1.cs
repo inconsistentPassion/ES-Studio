@@ -113,31 +113,6 @@ namespace ES_GUI
             asset.Parent = baseAsset;
         }
 
-        private void UpdateCheck()
-        {
-            #if !DEBUG
-            string newVersion = string.Empty;
-            try
-            {
-                newVersion = new WebClient().DownloadString("https://raw.githubusercontent.com/RealIndica/ES-Studio/main/version.txt");
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("Unable to check if a new version is available.\r\n" + e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            if (!newVersion.Contains(version))
-            {
-                DialogResult = MessageBox.Show("A new version of ES-Studio is available.\r\nWould you like to go download it now?", "Outdated Client", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (DialogResult == DialogResult.Yes)
-                {
-                    Process.Start("https://github.com/RealIndica/ES-Studio/releases");
-                }
-            }
-            #endif
-        }
-
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
             if (!client.isConnected && readyToConnect)
@@ -301,7 +276,6 @@ namespace ES_GUI
                         });
                     }
                 }
-                UpdateCheck();
                 readyToConnect = true;
             });
             t.Start();

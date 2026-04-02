@@ -10,3 +10,4 @@ C:\Users\HORACE\source\repos\inconsistentPassion\ES-Studio\ColorMapEditor\obj\Re
 C:\Users\HORACE\source\repos\inconsistentPassion\ES-Studio\ColorMapEditor\obj\Release\ColorMap.E7B7E227.Up2Date
 C:\Users\HORACE\source\repos\inconsistentPassion\ES-Studio\ColorMapEditor\obj\Release\ColorMapEditor.exe
 C:\Users\HORACE\source\repos\inconsistentPassion\ES-Studio\ColorMapEditor\obj\Release\ColorMapEditor.pdb
+C:\Users\HORACE\source\repos\inconsistentPassion\ES-Studio\ColorMapEditor\obj\Release\ColorMapEditor.exe.config
