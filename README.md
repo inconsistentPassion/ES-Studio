@@ -23,7 +23,8 @@ ES-Studio (Engine Simulator Studio) is a program to simulate an ECU for Engine S
 - Timing gauge with real-time spark advance adjustment
 - Customizable 2D engine paramater maps with multiple input and output paramaters
 - Advanced Dyno with tonnes of functionality
-- Drag strip simulation for 1/4 mile, 1/2 mile and 1 mile times (coming soon)
+- Drag strip simulation for 1/4 mile, 1/2 mile and 1 mile times
+- Dragy-like Acceleration and speed graph
 - Advanced quick shifter to cut or retard ignition during a gear shift that has customizable shift order, cut time, spark angle and automatic clutch control
 - Advanced auto blipper to "blip" the throttle during a down shift that has customizable blip time and throttle amount
 - Idle control
@@ -42,10 +43,9 @@ ES-Studio (Engine Simulator Studio) is a program to simulate an ECU for Engine S
 - Engine Simulator v0.1.14a+
 
 # Known Bugs
-- ~~You must restart the GUI if you have disconnected from Engine Simulator or if Engine Simulator has been closed~~
-- Small chance of crashing when switching between engines
-- ~~Spark table can become unreadable for high RPM engines~~
-- Load calibration not working correctly under certain circumstances(?)
+
+- Small chance of crashing when connecting to the Engine Simulator, Chances get bigger the more cylinders the engine has.
+- Load calibration not working correctly under most circumstances
 
 # Building
 - Ensure you have Visual Studio with C++ and C# installed
