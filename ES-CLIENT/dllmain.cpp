@@ -55,52 +55,58 @@ void UpdateParams() {
 }
 
 void HandleUpdate(const char* input) {
-    json data = json::parse(input);
-    engineEdit->sparkAdvance = data["sparkAdvance"];
-    engineEdit->useIgnTable = data["useIgnTable"];
-    engineEdit->customSpark = data["customSpark"];
-    engineEdit->useRpmTable = data["useRpmTable"];
-    engineEdit->customRevLimit = data["customRevLimit"];
-    engineEdit->useCylinderTable = data["useCylinderTable"];
-    engineEdit->useCylinderTableRandom = data["useCylinderTableRandom"];
-    engineEdit->activeCylinderCount = data["activeCylinderCount"];
-    engineEdit->activeCylindersRandomUpdateTime = data["activeCylindersRandomUpdateTime"];
-    engineEdit->quickShiftEnabled = data["quickShiftEnabled"];
-    engineEdit->quickShiftTime = data["quickShiftTime"];
-    engineEdit->quickShiftRetardTime = data["quickShiftRetardTime"];
-    engineEdit->quickShiftRetardDeg = data["quickShiftRetardDeg"];
-    engineEdit->quickShiftMode = data["quickShiftMode"];
-    engineEdit->quickShiftAutoClutch = data["quickShiftAutoClutch"];
-    engineEdit->quickShiftCutThenShift = data["quickShiftCutThenShift"];
-    engineEdit->autoBlipEnabled = data["autoBlipEnabled"];
-    engineEdit->autoBlipThrottle = data["autoBlipThrottle"];
-    engineEdit->autoBlipTime = data["autoBlipTime"];
-    engineEdit->dsgFarts = data["dsgFarts"];
-    engineEdit->twoStepEnabled = data["twoStepEnabled"];
-    engineEdit->disableRevLimit = data["disableRevLimit"];
-    engineEdit->rev1 = data["rev1"];
-    engineEdit->rev2 = data["rev2"];
-    engineEdit->rev3 = data["rev3"];
-    engineEdit->useCustomIgnitionModule = data["useCustomIgnitionModule"];
-    engineEdit->twoStepLimiterMode = data["twoStepLimiterMode"];
-    engineEdit->twoStepCutTime = data["twoStepCutTime"];
-    engineEdit->twoStepRetardDeg = data["twoStepRetardDeg"];
-    engineEdit->twoStepSwitchThreshold = data["twoStepSwitchThreshold"];
-    engineEdit->allowTwoStepInGear = data["allowTwoStepInGear"];
-    engineEdit->idleHelper = data["idleHelper"];
-    engineEdit->idleHelperRPM = data["idleHelperRPM"];
-    engineEdit->idleHelperMaxTps = data["idleHelperMaxTps"];
-    engineEdit->speedLimiter = data["speedLimiter"];
-    engineEdit->speedLimiterSpeed = data["speedLimiterSpeed"];
-    engineEdit->speedLimiterMode = data["speedLimiterMode"];
-    engineEdit->useAfrTable = data["useAfrTable"];
-    engineEdit->targetAfr = data["targetAfr"];
-    engineEdit->loadCalibrationMode = data["loadCalibrationMode"];
-    engineEdit->doubleCamSpeed = data["doubleCamSpeed"];
-    engineEdit->dfcoEnabled = data["dfcoEnabled"];
-    engineEdit->dfcoExitRPM = data["dfcoExitRPM"];
-    engineEdit->dfcoSpark = data["dfcoSpark"];
-    engineEdit->dfcoEnterDelay = data["dfcoEnterDelay"];
+    try {
+        json data = json::parse(input);
+        
+        if (data.contains("sparkAdvance")) engineEdit->sparkAdvance = data["sparkAdvance"];
+        if (data.contains("useIgnTable")) engineEdit->useIgnTable = data["useIgnTable"];
+        if (data.contains("customSpark")) engineEdit->customSpark = data["customSpark"];
+        if (data.contains("useRpmTable")) engineEdit->useRpmTable = data["useRpmTable"];
+        if (data.contains("customRevLimit")) engineEdit->customRevLimit = data["customRevLimit"];
+        if (data.contains("useCylinderTable")) engineEdit->useCylinderTable = data["useCylinderTable"];
+        if (data.contains("useCylinderTableRandom")) engineEdit->useCylinderTableRandom = data["useCylinderTableRandom"];
+        if (data.contains("activeCylinderCount")) engineEdit->activeCylinderCount = data["activeCylinderCount"];
+        if (data.contains("activeCylindersRandomUpdateTime")) engineEdit->activeCylindersRandomUpdateTime = data["activeCylindersRandomUpdateTime"];
+        if (data.contains("quickShiftEnabled")) engineEdit->quickShiftEnabled = data["quickShiftEnabled"];
+        if (data.contains("quickShiftTime")) engineEdit->quickShiftTime = data["quickShiftTime"];
+        if (data.contains("quickShiftRetardTime")) engineEdit->quickShiftRetardTime = data["quickShiftRetardTime"];
+        if (data.contains("quickShiftRetardDeg")) engineEdit->quickShiftRetardDeg = data["quickShiftRetardDeg"];
+        if (data.contains("quickShiftMode")) engineEdit->quickShiftMode = data["quickShiftMode"];
+        if (data.contains("quickShiftAutoClutch")) engineEdit->quickShiftAutoClutch = data["quickShiftAutoClutch"];
+        if (data.contains("quickShiftCutThenShift")) engineEdit->quickShiftCutThenShift = data["quickShiftCutThenShift"];
+        if (data.contains("autoBlipEnabled")) engineEdit->autoBlipEnabled = data["autoBlipEnabled"];
+        if (data.contains("autoBlipThrottle")) engineEdit->autoBlipThrottle = data["autoBlipThrottle"];
+        if (data.contains("autoBlipTime")) engineEdit->autoBlipTime = data["autoBlipTime"];
+        if (data.contains("dsgFarts")) engineEdit->dsgFarts = data["dsgFarts"];
+        if (data.contains("twoStepEnabled")) engineEdit->twoStepEnabled = data["twoStepEnabled"];
+        if (data.contains("disableRevLimit")) engineEdit->disableRevLimit = data["disableRevLimit"];
+        if (data.contains("rev1")) engineEdit->rev1 = data["rev1"];
+        if (data.contains("rev2")) engineEdit->rev2 = data["rev2"];
+        if (data.contains("rev3")) engineEdit->rev3 = data["rev3"];
+        if (data.contains("useCustomIgnitionModule")) engineEdit->useCustomIgnitionModule = data["useCustomIgnitionModule"];
+        if (data.contains("twoStepLimiterMode")) engineEdit->twoStepLimiterMode = data["twoStepLimiterMode"];
+        if (data.contains("twoStepCutTime")) engineEdit->twoStepCutTime = data["twoStepCutTime"];
+        if (data.contains("twoStepRetardDeg")) engineEdit->twoStepRetardDeg = data["twoStepRetardDeg"];
+        if (data.contains("twoStepSwitchThreshold")) engineEdit->twoStepSwitchThreshold = data["twoStepSwitchThreshold"];
+        if (data.contains("allowTwoStepInGear")) engineEdit->allowTwoStepInGear = data["allowTwoStepInGear"];
+        if (data.contains("idleHelper")) engineEdit->idleHelper = data["idleHelper"];
+        if (data.contains("idleHelperRPM")) engineEdit->idleHelperRPM = data["idleHelperRPM"];
+        if (data.contains("idleHelperMaxTps")) engineEdit->idleHelperMaxTps = data["idleHelperMaxTps"];
+        if (data.contains("speedLimiter")) engineEdit->speedLimiter = data["speedLimiter"];
+        if (data.contains("speedLimiterSpeed")) engineEdit->speedLimiterSpeed = data["speedLimiterSpeed"];
+        if (data.contains("speedLimiterMode")) engineEdit->speedLimiterMode = data["speedLimiterMode"];
+        if (data.contains("useAfrTable")) engineEdit->useAfrTable = data["useAfrTable"];
+        if (data.contains("targetAfr")) engineEdit->targetAfr = data["targetAfr"];
+        if (data.contains("loadCalibrationMode")) engineEdit->loadCalibrationMode = data["loadCalibrationMode"];
+        if (data.contains("doubleCamSpeed")) engineEdit->doubleCamSpeed = data["doubleCamSpeed"];
+        if (data.contains("dfcoEnabled")) engineEdit->dfcoEnabled = data["dfcoEnabled"];
+        if (data.contains("dfcoExitRPM")) engineEdit->dfcoExitRPM = data["dfcoExitRPM"];
+        if (data.contains("dfcoSpark")) engineEdit->dfcoSpark = data["dfcoSpark"];
+        if (data.contains("dfcoEnterDelay")) engineEdit->dfcoEnterDelay = data["dfcoEnterDelay"];
+    }
+    catch (const json::exception& e) {
+        std::cerr << "JSON Exception in HandleUpdate: " << e.what() << std::endl;
+    }
 }
 
 void PipeReader() {
@@ -166,10 +172,9 @@ void Main() {
 
     std::thread update(Update);
     std::thread reader(PipeReader);
-    update.join();
-    reader.join();
+    update.detach();
+    reader.detach();
 }
-
 
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
