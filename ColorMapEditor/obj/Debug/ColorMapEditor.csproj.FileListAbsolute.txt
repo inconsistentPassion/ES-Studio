@@ -20,3 +20,15 @@ C:\Users\HORACE\Desktop\ESGUI\ColorMapEditor\obj\Debug\ColorMapEditor.csproj.Gen
 C:\Users\HORACE\Desktop\ESGUI\ColorMapEditor\obj\Debug\ColorMapEditor.csproj.CoreCompileInputs.cache
 C:\Users\HORACE\Desktop\ESGUI\ColorMapEditor\obj\Debug\ColorMapEditor.exe
 C:\Users\HORACE\Desktop\ESGUI\ColorMapEditor\obj\Debug\ColorMapEditor.pdb
+C:\Users\HORACE\source\repos\inconsistentPassion\ES-Studio\ColorMapEditor\bin\Debug\ColorMapEditor.exe.config
+C:\Users\HORACE\source\repos\inconsistentPassion\ES-Studio\ColorMapEditor\bin\Debug\ColorMapEditor.pdb
+C:\Users\HORACE\source\repos\inconsistentPassion\ES-Studio\ColorMapEditor\obj\Debug\ColorMapEditor.csproj.AssemblyReference.cache
+C:\Users\HORACE\source\repos\inconsistentPassion\ES-Studio\ColorMapEditor\obj\Debug\ColorMapEditor.exe.config
+C:\Users\HORACE\source\repos\inconsistentPassion\ES-Studio\ColorMapEditor\obj\Debug\ColorMapEditor.Controls.Table3DView.resources
+C:\Users\HORACE\source\repos\inconsistentPassion\ES-Studio\ColorMapEditor\obj\Debug\ColorMapEditor.FrmMain.resources
+C:\Users\HORACE\source\repos\inconsistentPassion\ES-Studio\ColorMapEditor\obj\Debug\ColorMapEditor.Properties.Resources.resources
+C:\Users\HORACE\source\repos\inconsistentPassion\ES-Studio\ColorMapEditor\obj\Debug\ColorMapEditor.csproj.GenerateResource.cache
+C:\Users\HORACE\source\repos\inconsistentPassion\ES-Studio\ColorMapEditor\obj\Debug\ColorMapEditor.csproj.CoreCompileInputs.cache
+C:\Users\HORACE\source\repos\inconsistentPassion\ES-Studio\ColorMapEditor\obj\Debug\ColorMapEditor.exe
+C:\Users\HORACE\source\repos\inconsistentPassion\ES-Studio\ColorMapEditor\obj\Debug\ColorMapEditor.pdb
+C:\Users\HORACE\source\repos\inconsistentPassion\ES-Studio\ColorMapEditor\obj\Debug\ColorMap.E7B7E227.Up2Date
